@@ -6,7 +6,7 @@ object_fileanalysis     =   FileAnalysis()
 
 class FileFilter:
 
-    def __init__(self) -> None:
+    def __init__(self,input_check) -> None:
 
         self._output_path_      =   object_fileanalysis._output_path_
 
@@ -14,7 +14,10 @@ class FileFilter:
 
         self._loglines_path_    =   "LogAnalyser/Output/LogLines.log"
 
-        self._look_up           =   ['[INFO]','[WARN]','[ERROR]']
+        self.input_check_p      =   "["+input_check+"]"
+
+        self.counter            =   0  
+        
 
     def applyingFilter(self):
 
@@ -24,34 +27,31 @@ class FileFilter:
 
             for lin in _fileData_:
 
-                for i in range(0,len(self._look_up)):
+                if  self.input_check_p in lin:
 
-                    if self._look_up[i] in lin:
+                    file_array        = []
 
-                        file_array        = lin.strip().split(self._look_up[i])
+                    file_array.append(lin)
 
-                unspaced_lines    =    file_array[0].replace("     "," ")
+                    self.counter+=1
 
-                piped_lines       =    unspaced_lines.replace(" ","|") # this log will be used for timestamp retrival
+                    with open(self._loglines_path_ ,"a")  as ll:
 
-                # piped_lines       =    piped_lines.split("|")
+                        ll.writelines(lin + "\n")
 
-                # if len(file_array)==2:
+                    unspaced_lines    =    file_array[0].replace("     "," ")
 
-                #     log_lines         =    file_array[1]
+                    piped_lines       =    unspaced_lines.replace(" ","|")
 
-                # else:
+                    piped_lines       =    piped_lines.strip().split("|")
 
-                #     log_lines         =    file_array[0]
+                    time_data         =    piped_lines[1:][0]+" "+piped_lines[1]
 
-                #     print(log_lines)
+                    with open(self._filtered_path_,"a")  as fil:
 
-                with open(self._filtered_path_,"a")  as fil:
+                        fil.writelines(time_data + "\n")
 
-                    fil.writelines(piped_lines + "\n")
+        print("No of "+self.input_check_p+" Statements are : ["+str(self.counter)+"]")
 
-                # with open(self._loglines_path_ ,"a")  as ll:
-
-                #     ll.writelines(log_lines+"\n")
 
                 
