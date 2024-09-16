@@ -18,7 +18,7 @@ class FileAnalysis:
 
     def fileAnlyser(self):
 
-        with open(self._file_path__,"r")     as f:
+        with open(self._file_path__,"r")  as f:
 
             _fileData_      =   f.readlines()
             
@@ -42,9 +42,13 @@ class FileAnalysis:
     '''
 
     def fileAnlyseLines (self,_fileData_,xcounter):
+        
+        test_counter    =   0
 
         for i in _fileData_[xcounter+1:]:
 
             with open(self._output_path_ ,"a")  as out:
 
                 out.writelines(i)
+
+            test_counter+=1
