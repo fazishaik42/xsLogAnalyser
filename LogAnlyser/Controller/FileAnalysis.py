@@ -35,3 +35,10 @@ class FileAnalysis():
             with open(self._output_path_ ,"a")  as out:
                 out.writelines(i)
             test_counter+=1
+            
+    '''
+        --> this is just a test function to trigger the button.
+    '''
+
+    def buttonTest(self):
+        print("Button Worked")
