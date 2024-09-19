@@ -1,35 +1,5 @@
-import difflib
-import os
-from FileAnalysis import FileAnalysis
-from FileFilter import FileFilter
-import tkinter
+
 from InputUI import InputUI
-
-
-'''
-    --> Intialising the Objects of the Two classes.
-    --> Adding an Input parameter for the User to select the Input parameter
-'''
-
-xs_Object       =   FileAnalysis()
-
-input_check     =   input("Enter the Input Parameter : ")
-
-xs_file_filter  =   FileFilter(input_check.upper())
-
-
-
-'''
-    --> The File Analyser will break the file and makes the file more readable in python.
-'''
-
-xs_Object.fileAnlyser()
-
-'''
-    --> The FileFilter class filters the statements based on the Input parameter.
-    --> After filtering the file, Seperates the respective Log statement in the LogLines file.
-'''
-xs_file_filter.applyingFilter()
 
 '''
     --> Adding the UI Elements from this section.
@@ -39,12 +9,17 @@ xs_file_filter.applyingFilter()
     --> Import the class from which the button should trigger the function.
     --> Intialise the button with the event of the function.
     --> Now the InputUI object takes the **kwargs
-    /*
-        self.xs_button_func     =   FileAnalysis()
-        self.xs_window_button   =   Button(text="Start Analysis", command=self.xs_button_func.buttonTest)
-    */
+
 '''
 
-xs_input_ui     =   InputUI(text="Start LogAnalyser", func=xs_Object.buttonTest)
+xs_input_ui     =   InputUI()
+
+'''
+    --> The xs_Open Window Method is called to Set the ScreenSize.
+    --> Accepts the String value from the Entry Window.
+    --> Sets the Button to trigger the Analyser
+    --> Arrange the Button onto the Grid
+    --> Accepts the Input and process the file anaylis, & applies filefilter
+'''
 
 xs_input_ui.xs_open_window()
