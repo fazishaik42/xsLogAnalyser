@@ -1,8 +1,11 @@
 import difflib
 import os
 from FileAnalysis import FileAnalysis
+# from InputUI import InputUI
 
 object_fileanalysis     =   FileAnalysis()
+
+# xs_ui_obj               =   InputUI()
 
 class FileFilter:
 
@@ -32,4 +35,8 @@ class FileFilter:
                     time_data         =    piped_lines[1:][0]+" "+piped_lines[1]
                     with open(self._filtered_path_,"a")  as fil:
                         fil.writelines(time_data + "\n")
-        print("No of "+self.input_check_p+" Statements are : ["+str(self.counter)+"]")
+
+    def no_of_statement(self):
+        self.input_check_p  =   self.input_check_p.replace("[", "").replace("]", "")
+        xs_msg=" "+str(self.counter)+" "+self.input_check_p+" Statements retrieved"
+        return xs_msg
