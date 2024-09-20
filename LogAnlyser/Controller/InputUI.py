@@ -1,9 +1,11 @@
 from tkinter import *
 import tkinter as tk
+
 import tkinter.messagebox 
 from FileFilter import FileFilter
 from FileAnalysis import FileAnalysis
 import time
+
 
 class InputUI:
 
@@ -13,7 +15,10 @@ class InputUI:
     '''
 
     def __init__(self,**kwargs):
-        self.main_screen          =   tk.Tk()
+        if kwargs.get("reset"):
+            self.main_screen          =   tk.Tk()
+        else:
+            self.main_screen          =   tk.Tk()
 
     '''
         --> The xs_Open Window Method is called to Set the ScreenSize.
@@ -27,9 +32,9 @@ class InputUI:
         self.main_screen.geometry("600x400")
         self.main_screen.title("LogAnalyser")
         self.xs_input_var         =   tk.StringVar()
-        self.name_label           =   tk.Label(self.main_screen, text = 'Statement Type ', font=('calibre',10, 'bold'))
+        self.name_label           =   tk.Label(self.main_screen, text = 'Statement Type', font=('calibre',10, 'bold'))
         self.name_entry           =   tk.Entry(self.main_screen,textvariable = self.xs_input_var , font=('calibre',10,'normal'))
-        self.sub_btn              =   tk.Button(self.main_screen,text = 'Start Analyser', command = self.xs_entry_func)
+        self.sub_btn              =   tk.Button(self.main_screen,text = 'Start Analyser', command = kwargs["func"])
         self.name_label.grid(row=0,column=2)
         self.name_entry.grid(row=0,column=3)
         self.sub_btn.grid(row=2,column=3)
@@ -38,6 +43,7 @@ class InputUI:
     '''
         --> This Function takes the Input from the screen & Passes the Input to a Function # pass_input()
     '''
+
     def xs_entry_func(self):
         x1                  =   self.name_entry.get()
         self.xs_newEntry    =   x1
@@ -45,15 +51,24 @@ class InputUI:
     
     '''
         --> This Function creates a small pop-up message after completing the Txn.
+        --> Fix the Icon Problem.
     '''
 
-    def xsSimpleMessage(self):
+    def xsSimpleMessage(self,**kwargs):
         self.root = tkinter.Tk() 
-        self.root.geometry('500x300') 
-        tkinter.messagebox.showinfo("LogAnalyser", "Success!") 
-        # time.sleep(2)
-        # self.root.destroy()
-        # self.root.mainloop()
+        self.root.geometry('500x300')
+        if kwargs.get("xs_msg")==None:
+            tkinter.messagebox.showinfo(title="", message=kwargs.get("obj").no_of_statement())
+        else:
+            tkinter.messagebox.showinfo(title="", message=kwargs.get("xs_msg"))
+        self.root.destroy()
+
+    def xs_ask_askokcancel(self):
+        self.root           =   tkinter.Tk() 
+        self.root.geometry('500x300')
+        xs_ok_to_cancel     =   tkinter.messagebox.askokcancel("askokcancel", "Want to continue?") 
+        return xs_ok_to_cancel
+    
     
     def pass_input(self,Entry):
 
@@ -77,7 +92,7 @@ class InputUI:
 
         self.xs_file_filter.applyingFilter()
 
-        time.sleep(2)
+        time.sleep(1)
  
 
         '''
@@ -90,4 +105,4 @@ class InputUI:
             --> Display a Success Message after closing MainScreen Window.
         '''
 
-        # self.xsSimpleMessage()
+        self.xsSimpleMessage(obj=self.xs_file_filter)
