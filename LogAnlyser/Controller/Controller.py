@@ -12,7 +12,8 @@ from InputUI import InputUI
 
 '''
 
-xs_input_ui     =   InputUI()
+xs_input_ui     =   InputUI(reset=False)
+
 
 '''
     --> The xs_Open Window Method is called to Set the ScreenSize.
@@ -22,4 +23,17 @@ xs_input_ui     =   InputUI()
     --> Accepts the Input and process the file anaylis, & applies filefilter
 '''
 
-xs_input_ui.xs_open_window()
+xs_input_ui.xs_open_window(func=xs_input_ui.xs_entry_func)
+
+'''
+    --> To restart the Application based on user Input.
+'''
+
+if xs_input_ui.xs_ask_askokcancel():
+    '''
+        --> Getting Exception when reinitialising 
+    '''
+    xs_input_ui_two =   InputUI(reset=True)
+    xs_input_ui_two.xs_open_window(func=xs_input_ui.xs_entry_func)
+else:
+    xs_input_ui.xsSimpleMessage(xs_msg="Application is Closing.")
