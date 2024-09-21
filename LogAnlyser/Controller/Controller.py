@@ -1,6 +1,7 @@
 
 from InputUI import InputUI
 
+
 '''
     --> Adding the UI Elements from this section.
     --> The below InputUI class is Initialised with a window.
@@ -12,7 +13,7 @@ from InputUI import InputUI
 
 '''
 
-xs_input_ui     =   InputUI(reset=False)
+xs_input_ui     =   InputUI()
 
 
 '''
@@ -21,6 +22,7 @@ xs_input_ui     =   InputUI(reset=False)
     --> Sets the Button to trigger the Analyser
     --> Arrange the Button onto the Grid
     --> Accepts the Input and process the file anaylis, & applies filefilter
+    --> Accepts the Input to search and also accepts the Input to ignore.
 '''
 
 xs_input_ui.xs_open_window(func=xs_input_ui.xs_entry_func)
@@ -33,7 +35,6 @@ if xs_input_ui.xs_ask_askokcancel():
     '''
         --> Getting Exception when reinitialising 
     '''
-    xs_input_ui_two =   InputUI(reset=True)
-    xs_input_ui_two.xs_open_window(func=xs_input_ui.xs_entry_func)
+    pass
 else:
     xs_input_ui.xsSimpleMessage(xs_msg="Application is Closing.")
