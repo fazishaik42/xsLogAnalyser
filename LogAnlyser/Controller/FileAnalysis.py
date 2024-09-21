@@ -27,12 +27,15 @@ class FileAnalysis():
     '''
         --> This Function will start the counter by skiping the Unnecessary lines.
         --> Write all the Import Lines into the Analysis log.
+        --> Adding Counter to Index the Lines
     '''
 
     def fileAnlyseLines (self,_fileData_,xcounter):
         test_counter    =   0
+        self.xs_index   =   0
         for i in _fileData_[xcounter+1:]:
             with open(self._output_path_ ,"a")  as out:
-                out.writelines(i)
+                out.writelines("Index "+str(self.xs_index)+" "+ i)
+            self.xs_index+=1
             test_counter+=1
             
