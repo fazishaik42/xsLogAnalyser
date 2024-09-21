@@ -1,13 +1,20 @@
 from tkinter import *
-import tkinter as tk
-
 import tkinter.messagebox 
 from FileFilter import FileFilter
 from FileAnalysis import FileAnalysis
 import time
-
+import customtkinter as ctk
 
 class InputUI:
+
+    '''
+        --> Imported the customtkinter module for better looking UI Design. 
+        --> Sets the Window them based on the System
+        --> Sets the default color theme.
+    '''
+
+    ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+    ctk.set_default_color_theme("blue")  
 
     '''
         --> write the **kwargs for the below __init__ method.
@@ -15,10 +22,16 @@ class InputUI:
     '''
 
     def __init__(self,**kwargs):
-        if kwargs.get("reset"):
-            self.main_screen          =   tk.Tk()
-        else:
-            self.main_screen          =   tk.Tk()
+        
+        '''
+            --> Setting up the root Screen.
+            --> Set the size of the Window.
+        '''
+        self.main_screen          =   ctk.CTk()
+        self.main_screen.geometry("300x300")
+        self.main_screen.title("LogAnalyser")
+        self.xs_frame             =   ctk.CTkFrame(master=self.main_screen)
+        self.xs_frame.pack(pady=10,padx=10)
 
     '''
         --> The xs_Open Window Method is called to Set the ScreenSize.
@@ -26,28 +39,38 @@ class InputUI:
         --> Sets the Button to trigger the Analyser
         --> Arrange the Button onto the Grid
         --> Accepts the Input and process the file anaylis, & applies filefilter
+        --> Added Label for "Search String" & "Ignore String"
     '''
 
     def xs_open_window(self,**kwargs):
-        self.main_screen.geometry("600x400")
-        self.main_screen.title("LogAnalyser")
-        self.xs_input_var         =   tk.StringVar()
-        self.name_label           =   tk.Label(self.main_screen, text = 'Statement Type', font=('calibre',10, 'bold'))
-        self.name_entry           =   tk.Entry(self.main_screen,textvariable = self.xs_input_var , font=('calibre',10,'normal'))
-        self.sub_btn              =   tk.Button(self.main_screen,text = 'Start Analyser', command = kwargs["func"])
-        self.name_label.grid(row=0,column=2)
-        self.name_entry.grid(row=0,column=3)
-        self.sub_btn.grid(row=2,column=3)
+        self.xs_input_var         =   ctk.StringVar()
+        self.xs_ignore_var        =   ctk.StringVar()
+        self.name_label           =   ctk.CTkLabel(master=self.xs_frame, text = 'Maximo Log Analysis', font=('calibre',15, 'bold'))
+        self.name_label.pack(pady=10, padx=10)
+        self.entry_label          =   ctk.CTkLabel(master=self.xs_frame, text = 'Search For', font=('calibre',10, 'bold'))
+        self.entry_label.pack(pady=10, padx=0)
+        self.name_entry           =   ctk.CTkEntry(master=self.xs_frame,textvariable = self.xs_input_var , font=('calibre',10,'normal'))
+        self.name_entry.pack(pady=0, padx=0)
+        self.ignore_label         =   ctk.CTkLabel(master=self.xs_frame, text = 'Ignore Statement of', font=('calibre',10, 'bold'))
+        self.ignore_label.pack(pady=10, padx=0)
+        self.ignore_entry         =   ctk.CTkEntry(master=self.xs_frame,textvariable = self.xs_ignore_var , font=('calibre',10,'normal'))
+        self.ignore_entry.pack(pady=0, padx=0)
+        self.sub_btn              =   ctk.CTkButton(master=self.xs_frame,text = 'Start Analyser', command = kwargs["func"])
+        self.sub_btn.pack(pady=10, padx=10)
         self.main_screen.mainloop()
 
     '''
-        --> This Function takes the Input from the screen & Passes the Input to a Function # pass_input()
+        --> This Method takes the Input from the screen & Passes the Input to a Function # pass_input()
+        --> This Method passes the Input and store thems in an array.
     '''
 
     def xs_entry_func(self):
-        x1                  =   self.name_entry.get()
-        self.xs_newEntry    =   x1
-        return self.pass_input(self.xs_newEntry)
+        self.x1                      =   self.name_entry.get()
+        self.x2                      =   self.ignore_entry.get()
+        self.x3                      =   []
+        self.x3.append(self.x1)
+        self.x3.append(self.x2)
+        return self.pass_input(self.x3)
     
     '''
         --> This Function creates a small pop-up message after completing the Txn.
@@ -70,13 +93,14 @@ class InputUI:
         return xs_ok_to_cancel
     
     
-    def pass_input(self,Entry):
+    def pass_input(self,x3):
 
         '''
             --> Intialising the Objects of the Two classes.
             --> Adding an Input parameter for the User to select the Input parameter
+            --> Intialises the FileFilter class with both "Search String" & "Ignore String"
         '''
-        self.xs_file_filter  =   FileFilter(Entry.upper())
+        self.xs_file_filter  =   FileFilter(accept=x3[0].upper(),ignore=x3[1].upper())
         self.xs_Object       =   FileAnalysis()
 
         '''
