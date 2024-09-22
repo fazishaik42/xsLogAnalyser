@@ -4,6 +4,7 @@ from FileFilter import FileFilter
 from FileAnalysis import FileAnalysis
 import time
 import customtkinter as ctk
+from pathlib import Path
 
 class InputUI:
 
@@ -13,7 +14,7 @@ class InputUI:
         --> Sets the default color theme.
     '''
 
-    ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+    ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
     ctk.set_default_color_theme("blue")  
 
     '''
@@ -21,16 +22,16 @@ class InputUI:
         --> **kwrgs should accept the button text, Command function.
     '''
 
-    def __init__(self,**kwargs):
-        
+    def __init__(self) :
+
         '''
             --> Setting up the root Screen.
             --> Set the size of the Window.
         '''
-        self.main_screen          =   ctk.CTk()
+        self.main_screen   =   ctk.CTk()
         self.main_screen.geometry("300x300")
         self.main_screen.title("LogAnalyser")
-        self.xs_frame             =   ctk.CTkFrame(master=self.main_screen)
+        self.xs_frame               =   ctk.CTkFrame(master=self.main_screen)
         self.xs_frame.pack(pady=10,padx=10)
 
     '''
@@ -58,6 +59,7 @@ class InputUI:
         self.sub_btn              =   ctk.CTkButton(master=self.xs_frame,text = 'Start Analyser', command = kwargs["func"])
         self.sub_btn.pack(pady=10, padx=10)
         self.main_screen.mainloop()
+        
 
     '''
         --> This Method takes the Input from the screen & Passes the Input to a Function # pass_input()
@@ -86,12 +88,22 @@ class InputUI:
             tkinter.messagebox.showinfo(title="", message=kwargs.get("xs_msg"))
         self.root.destroy()
 
-    def xs_ask_askokcancel(self):
+    def xs_ask_askokcancel(self,msg):
         self.root           =   tkinter.Tk() 
         self.root.geometry('500x300')
-        xs_ok_to_cancel     =   tkinter.messagebox.askokcancel("askokcancel", "Want to continue?") 
+        xs_ok_to_cancel     =   tkinter.messagebox.askokcancel("askokcancel", msg) 
         return xs_ok_to_cancel
     
+    def removeOutputfiles(self):
+        root_folder         =   Path(self.xs_Object.xs_root_dir)
+        print(f"Path to Output Folder:{root_folder}")
+        for f in root_folder.iterdir():
+            try:
+                if f.is_file():
+                    f.unlink()
+                    print(f"Deleted Files as per user Input :{f}")
+            except Exception as e:
+                print(f"Error deleting file {f} : {e}")
     
     def pass_input(self,x3):
 
@@ -116,13 +128,13 @@ class InputUI:
 
         self.xs_file_filter.applyingFilter()
 
+
         time.sleep(1)
- 
 
         '''
             --> Close the Window after the Input is Passed
         '''
-
+        
         self.main_screen.destroy()
 
         '''
