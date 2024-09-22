@@ -15,6 +15,8 @@ class FileFilter:
         self._output_path_      =   object_fileanalysis._output_path_
         self._filtered_path_    =   "LogAnalyser/Output/Filter.log"
         self._loglines_path_    =   "LogAnalyser/Output/LogLines.log"
+        self.xs_log_prep        =   "LogAnalyser/Output/Logprep.log"
+        self.xs_AI_resp         =   "LogAnalyser/Output/Gemini Resp.log"
         self.input_check_p      =   "["+kwargs.get("accept")+"]"
         self.xs_ignore_search   =   "["+kwargs.get("ignore")+"]"
         self.counter            =   0  
@@ -47,3 +49,61 @@ class FileFilter:
         self.input_check_p  =   self.input_check_p.replace("[", "").replace("]", "")
         xs_msg=" "+str(self.counter)+" "+self.input_check_p+" Statements retrieved"
         return xs_msg
+    
+    '''
+        --> This method returns the segregated ERROR statement to AI request Handler.
+        --> This method return the statements in the form of List.
+        --> This method ignores the WARN Statements
+
+    '''
+
+    def readErrorStatement(self):
+
+        with open(self._loglines_path_,"r") as err:
+            xs_error_data       =   err.readlines()
+            xs_error_holder     =   []
+            xs_traceHolder      =   []
+            xs_container        =   []
+            xs_ignore_war       =   "[WARN]"    
+            for er in xs_error_data:
+                if (self.input_check_p in er) and (xs_ignore_war not in er):
+                    xs_error_holder.append(er)
+                else:
+                    xs_traceHolder.append(er)
+            xs_container.append(xs_error_holder)
+            xs_container.append(xs_traceHolder)
+            with open(self.xs_log_prep ,'a')  as xs_lp:
+                xs_ai_reqBody   =   []
+                for x in range(0,len(xs_container[0])):
+                    xs_lp.write(str(xs_container[0][x]))
+                    if  self.input_check_p  in str(xs_container[0][x]):
+                        xs_Ai_body     =  {
+                                "contents": [
+                                    {
+                                        "parts": [
+                                            {
+                                                "text": "Analysing the Maximo Log, Gave me this errored Log statements. Analyse this log statatement and rate this error on a scale of 1 to 5 where 1 being the critical. Please provide necessary solotion steps as well. Error starts from here :  "+ xs_container[0][x] 
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        xs_ai_reqBody.append(xs_Ai_body)
+
+                return xs_ai_reqBody
+
+                '''
+                        --> The below commented statement can generate the Stack trace this stack trace, is not necessary at this point in time.
+                        --> Just analysing the high level error statements.
+                '''
+                        # for y in range(0,len(xs_container[1])):
+                        #     xs_lp.write(str(xs_container[1][y]))
+    '''
+        --> Writes the AI Response to a log File.
+        --> Receives the Input data from AI Response.
+    '''
+    def xsWriteAIResponse(self,data):
+        with open(self.xs_AI_resp,'a') as resp:
+            resp.write(data)
+            resp.write("============================================================================================================================================================================================")
+                        
