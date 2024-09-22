@@ -1,6 +1,6 @@
 
 from InputUI import InputUI
-from GenAIRequests import GenAIRequests
+from GenAIRequestHandler import GenAIRequestHandler
 
 xs_is_start     =   True
 
@@ -32,12 +32,12 @@ while xs_is_start:
 
     '''
         --> Generates a file for AI Response.
-        -->Triggers GenAIRequests class file.
+        -->Triggers GenAIRequestHandler class file.
         --> Ask the user to check the with Gemini for responses.
     '''
     if xs_input_ui.xs_ask_askokcancel(msg="Check Gemini AI Response for Log Analysis?"):
 
-        xs_AI           =   GenAIRequests()
+        xs_AI           =   GenAIRequestHandler()
 
         xs_AI.xsRequestAI()
 
