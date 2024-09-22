@@ -16,7 +16,7 @@ API_KEY         =       ""
 GEN_AI_URL      =       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="
 
 
-class GenAIRequests:
+class GenAIRequestHandler:
 
     def __init__(self) -> None:
         pass
