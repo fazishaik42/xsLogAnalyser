@@ -6,6 +6,7 @@ class FileAnalysis():
         self._output_path_           =       "LogAnalyser/Output/Analysis.log"
         self._analysis_start         =       "End Display Current Environment"
         self.file_start              =        False
+        self.xs_root_dir             =       "LogAnalyser/Output"
 
         
     '''
@@ -27,18 +28,17 @@ class FileAnalysis():
     '''
         --> This Function will start the counter by skiping the Unnecessary lines.
         --> Write all the Import Lines into the Analysis log.
+        --> Adding Counter to Index the Lines
+        --> Uncomment the line if index are needed.
     '''
 
     def fileAnlyseLines (self,_fileData_,xcounter):
         test_counter    =   0
+        self.xs_index   =   0
         for i in _fileData_[xcounter+1:]:
             with open(self._output_path_ ,"a")  as out:
-                out.writelines(i)
+                out.writelines(""+str(self.xs_index)+" "+ i)
+                # out.writelines(i)
+            self.xs_index+=1
             test_counter+=1
             
-    '''
-        --> this is just a test function to trigger the button.
-    '''
-
-    def buttonTest(self):
-        print("Button Worked")
