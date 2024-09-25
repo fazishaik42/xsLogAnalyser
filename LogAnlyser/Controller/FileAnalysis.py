@@ -2,7 +2,7 @@ class FileAnalysis():
     
     def __init__(self) -> None:
         # super.__init__()
-        self._file_path__            =       "LogAnalyser/Model/DataLayer/x1.log"
+        self._file_path__            =       "LogAnalyser/Model/DataLayer/sys.log"
         self._output_path_           =       "LogAnalyser/Output/Analysis.log"
         self._analysis_start         =       "End Display Current Environment"
         self.file_start              =        False
