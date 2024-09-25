@@ -4,7 +4,9 @@ from FileFilter import FileFilter
 from FileAnalysis import FileAnalysis
 import time
 import customtkinter as ctk
+import customtkinter as ctkx
 from pathlib import Path
+from GenAIRequestHandler import GenAIRequestHandler
 
 class InputUI:
 
@@ -29,7 +31,7 @@ class InputUI:
             --> Set the size of the Window.
         '''
         self.main_screen   =   ctk.CTk()
-        self.main_screen.geometry("300x300")
+        self.main_screen.geometry("1280x720")
         self.main_screen.title("LogAnalyser")
         self.xs_frame               =   ctk.CTkFrame(master=self.main_screen)
         self.xs_frame.pack(pady=10,padx=10)
@@ -46,20 +48,23 @@ class InputUI:
     def xs_open_window(self,**kwargs):
         self.xs_input_var         =   ctk.StringVar()
         self.xs_ignore_var        =   ctk.StringVar()
-        self.name_label           =   ctk.CTkLabel(master=self.xs_frame, text = 'Maximo Log Analysis', font=('calibre',15, 'bold'))
-        self.name_label.pack(pady=10, padx=10)
+        self.name_label           =   ctk.CTkLabel(master=self.xs_frame, text = '    Maximo Log Analysis', font=('calibre',15, 'bold'))
         self.entry_label          =   ctk.CTkLabel(master=self.xs_frame, text = 'Search For', font=('calibre',10, 'bold'))
-        self.entry_label.pack(pady=10, padx=0)
         self.name_entry           =   ctk.CTkEntry(master=self.xs_frame,textvariable = self.xs_input_var , font=('calibre',10,'normal'))
-        self.name_entry.pack(pady=0, padx=0)
         self.ignore_label         =   ctk.CTkLabel(master=self.xs_frame, text = 'Ignore Statement of', font=('calibre',10, 'bold'))
-        self.ignore_label.pack(pady=10, padx=0)
         self.ignore_entry         =   ctk.CTkEntry(master=self.xs_frame,textvariable = self.xs_ignore_var , font=('calibre',10,'normal'))
-        self.ignore_entry.pack(pady=0, padx=0)
         self.sub_btn              =   ctk.CTkButton(master=self.xs_frame,text = 'Start Analyser', command = kwargs["func"])
-        self.sub_btn.pack(pady=10, padx=10)
+        self.name_label.grid(row=0,   column=3)
+        self.entry_label.grid(row=1,  column=1)
+        self.name_entry.grid(row=1,   column=2)
+        self.ignore_label.grid(row=1, column=3)
+        self.ignore_entry.grid(row=1, column=4)
+        self.sub_btn.grid(row=1,      column=5)
+        for widget in self.xs_frame.winfo_children():
+            widget.grid_configure(padx=5,pady=5)
+        self.xs_frame.pack(padx=10,pady=10)
         self.main_screen.mainloop()
-        
+
 
     '''
         --> This Method takes the Input from the screen & Passes the Input to a Function # pass_input()
@@ -74,6 +79,7 @@ class InputUI:
         self.x3.append(self.x2)
         return self.pass_input(self.x3)
     
+
     '''
         --> This Function creates a small pop-up message after completing the Txn.
         --> Fix the Icon Problem.
@@ -104,7 +110,96 @@ class InputUI:
                     print(f"Deleted Files as per user Input :{f}")
             except Exception as e:
                 print(f"Error deleting file {f} : {e}")
+
+    '''
+        --> Function return the response that is generated from the AI.
+    '''
+    def xsCheckAIResp(self):
+        with open(self.xs_file_filter.xs_AI_resp,'r') as ai_Resp:
+            ai_Resp_data      =   ai_Resp.readlines()
+            for ai in ai_Resp_data:
+                try:
+                    ai_txt            =   ""
+                    ai_txt            +=  ai
+                finally:
+                    # self.xs_gem_val.insert(ctk.END, ai_txt)
+                    pass
+                return ai_txt
+            
+    '''
+        --> Function opens a New Window to access the AI Response.
+    '''        
+    def open_new_window(self,**kwargs):
+        self.AI_screen   =   ctkx.CTkToplevel(self.main_screen)
+        self.AI_screen.geometry("1280x720")
+        self.AI_screen.title("LogAnalyser")
+        self.xs_AI_frame             =   ctkx.CTkFrame(master=self.AI_screen)
+        self.xs_AI_frame.pack(pady=10,padx=10)
+        xs_AI_name_label          =   ctkx.CTkLabel(master=self.xs_AI_frame, text = 'Responses from the GEMINI AI', font=('calibre',15, 'bold'))
+        self.resp_btn             =   ctkx.CTkButton(master=self.xs_AI_frame,text = 'AI Response',command=kwargs.get("func"))
+        self.Ai_Close             =   ctkx.CTkButton(master=self.xs_AI_frame,text = 'Close',command=kwargs.get("Close"))
+        xs_AI_name_label.grid(row=0,column=0)
+        self.resp_btn.grid(row=0,column=1)
+        self.Ai_Close.grid(row=0,column=2)
+        xs_txt_frame             =   ctkx.CTkFrame(master=self.AI_screen)
+        self.xs_gem_val          =   ctkx.CTkTextbox(master=xs_txt_frame,width=1024,height=768,corner_radius=5)
+        self.xs_gem_val.grid(row=0,column=0)
+        self.xs_gem_val.pack(padx=5,pady=5)
+        xs_txt_frame.pack(pady=10,padx=10)
+        for widget in self.xs_AI_frame.winfo_children():
+            widget.grid_configure(padx=5,pady=5)
+        self.xs_AI_frame.pack(padx=10,pady=10)
+        self.AI_screen.mainloop()
+
+    '''
+        --> New window that is opened as part of the AI response, The below function will close the AI response.
+    '''
+    def windowDestroy(self):
+        self.AI_screen.destroy()
+
+    '''
+        --> Function that Return the AI Response in the Text Window.
     
+    '''
+
+    def xs_AI_func(self):
+        print("Button Clicked")
+        self.xs_AI_Instance  =   FileFilter(accept="ERROR",ignore="INFO")
+        with open(self.xs_AI_Instance.xs_AI_resp,'r') as ai_Resp:
+            ai_Resp_data      =   ai_Resp.readlines()
+            for ai in ai_Resp_data:
+                try:
+                    ai_txt            =   ""
+                    ai_txt            +=  ai
+                finally:
+                    self.xs_gem_val.insert(ctkx.END, ai_txt)
+
+    '''
+        --> Timer function
+        --> Timer function will open a windows for 30 seconds and starts the timer for 30 sec
+    '''
+
+    def xs_open_timer(self):
+        self.win = ctkx.CTkToplevel()
+        self.win.geometry("300x300")
+        self.xs__timer_label    =   ctkx.CTkLabel(master=self.win, text = 'Responses from the GEMINI AI', font=('calibre',10, 'bold'))
+        self.xs__timer_label.grid(row=0,column=0)
+        self.xs__timer_label.pack(padx=5,pady=5)
+        index = 15
+        start_timer = True
+        while start_timer:
+            self.xs__timer_label.configure(text="Awaiting Response from AI... "+str(index))
+            self.xs__timer_label.after(1000)
+            self.xs__timer_label.update()
+            index -= 1
+            if index < 1:
+                start_timer = False
+            else:
+                start_timer = True
+        self.win.destroy()
+        self.win.mainloop()
+
+              
     def pass_input(self,x3):
 
         '''
@@ -132,13 +227,49 @@ class InputUI:
         time.sleep(1)
 
         '''
-            --> Close the Window after the Input is Passed
-        '''
-        
-        self.main_screen.destroy()
-
-        '''
             --> Display a Success Message after closing MainScreen Window.
         '''
 
         self.xsSimpleMessage(obj=self.xs_file_filter)
+
+
+        '''
+            --> Call the AI Class starting from here.
+            --> Generates a file for AI Response.
+            -->Triggers GenAIRequestHandler class file.
+            --> Ask the user to check the with Gemini for responses.
+
+        '''
+        xs_AI           =   GenAIRequestHandler()
+
+        xs_AI.xsRequestAI()      
+
+        '''
+            --> Call the New Window here. 
+            --> Call this method to check the response on screen.
+            --> Screen Sizes:
+                    - 800x600(4:3)
+                    - 1024x768(4:3)
+                    - 1152x864(4:3)
+                    - 1280x960(4:3)
+                    - 1280x720(16:9)
+                    - 1920x1080(16:9)
+                    - 2560x1440(16:9)
+                    - 3840x2160(16:9)
+                    - 1280x800(16:10)
+                    - 1920x1200(16:10)
+                    - 2560x1600(16:10)
+                    - 2880x1800(16:10)
+            --> xs_AI_screen
+                    - xs_AI_frame
+                        - xs_AI_name_label
+                    - xs_txt_frame
+                        - xs_gem_val                                               
+        '''
+        self.open_new_window(func=self.xs_AI_func,Close=self.windowDestroy)
+
+        '''
+            --> Close the Window after the Input is Passed
+        '''
+        
+        self.main_screen.destroy()
