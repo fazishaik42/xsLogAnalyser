@@ -8,6 +8,8 @@ import customtkinter as ctkx
 from pathlib import Path
 from GenAIRequestHandler import GenAIRequestHandler
 
+
+
 class InputUI:
 
     '''
@@ -30,7 +32,7 @@ class InputUI:
             --> Setting up the root Screen.
             --> Set the size of the Window.
         '''
-        self.main_screen   =   ctk.CTk()
+        self.main_screen   =   ctk.CTkToplevel()
         self.main_screen.geometry("1280x720")
         self.main_screen.title("LogAnalyser")
         self.xs_frame               =   ctk.CTkFrame(master=self.main_screen)
@@ -54,17 +56,24 @@ class InputUI:
         self.ignore_label         =   ctk.CTkLabel(master=self.xs_frame, text = 'Ignore Statement of', font=('calibre',10, 'bold'))
         self.ignore_entry         =   ctk.CTkEntry(master=self.xs_frame,textvariable = self.xs_ignore_var , font=('calibre',10,'normal'))
         self.sub_btn              =   ctk.CTkButton(master=self.xs_frame,text = 'Start Analyser', command = kwargs["func"])
-        self.name_label.grid(row=0,   column=3)
+        self.sub_cls              =   ctk.CTkButton(master=self.xs_frame,text = 'Close Analyser', command = kwargs["cls"])
+        self.name_label.grid(row=0,   column=4)
         self.entry_label.grid(row=1,  column=1)
         self.name_entry.grid(row=1,   column=2)
         self.ignore_label.grid(row=1, column=3)
         self.ignore_entry.grid(row=1, column=4)
         self.sub_btn.grid(row=1,      column=5)
+        self.sub_cls.grid(row=1,      column=6)
         for widget in self.xs_frame.winfo_children():
             widget.grid_configure(padx=5,pady=5)
         self.xs_frame.pack(padx=10,pady=10)
         self.main_screen.mainloop()
 
+    '''
+        --> Function to close the main screen windo
+    '''
+    def cls(self):
+        self.main_screen.destroy()
 
     '''
         --> This Method takes the Input from the screen & Passes the Input to a Function # pass_input()
@@ -72,6 +81,9 @@ class InputUI:
     '''
 
     def xs_entry_func(self):
+        if self.name_entry.get()==None or self.name_entry.get()=='':
+            self.xsSimpleMessage(xs_msg="Please provide a Search String ?")
+
         self.x1                      =   self.name_entry.get()
         self.x2                      =   self.ignore_entry.get()
         self.x3                      =   []
