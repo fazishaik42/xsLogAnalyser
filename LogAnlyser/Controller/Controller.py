@@ -27,7 +27,7 @@ while xs_is_start:
         --> Accepts the Input to search and also accepts the Input to ignore.
     '''
 
-    xs_input_ui.xs_open_window(func=xs_input_ui.xs_entry_func)
+    xs_input_ui.xs_open_window(func=xs_input_ui.xs_entry_func,cls=xs_input_ui.cls)
 
     '''
         --> Generates a file for AI Response.
@@ -39,7 +39,7 @@ while xs_is_start:
     if xs_input_ui.xs_ask_askokcancel(msg="System will remove the logs of Old Analysis"):
         xs_input_ui.removeOutputfiles()
 
-        xs_is_start     =   False
+        xs_is_start     =   True
  
     else:
         xs_is_start     =   False
